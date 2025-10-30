@@ -67,4 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
   revealElements.forEach((elem) => {
     revealObserver.observe(elem);
   });
+
+  // Hamburger Menu
+  const hamburger = document.querySelector(".hamburger");
+  const navLinks = document.querySelector(".nav-links");
+
+  hamburger.addEventListener("click", () => {
+    navLinks.classList.toggle("nav-active");
+    hamburger.classList.toggle("toggle");
+  });
 });
