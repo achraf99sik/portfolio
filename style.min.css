@@ -462,3 +462,33 @@ section.visible {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Custom Scrollbar */
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--accent-primary);
+  border-radius: 6px;
+  border: 2px solid var(--bg-dark);
+}
+
+/* Custom Cursor */
+body {
+  cursor: url('./cursor.svg'), auto;
+}
+
+a,
+button,
+.btn,
+.project-link,
+.social-links a,
+.skill-list span,
+.hamburger {
+  cursor: url('./pointer.svg'), auto;
+}
