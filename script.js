@@ -76,5 +76,24 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.classList.toggle("nav-active");
     hamburger.classList.toggle("toggle");
   });
+
+  // Smooth Scrolling and URL Hash Removal
+  const allNavLinks = document.querySelectorAll('a[href^="#"]');
+
+  allNavLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const href = this.getAttribute('href');
+      const targetElement = document.querySelector(href);
+
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth'
+        });
+
+        history.replaceState(null, document.title, window.location.pathname);
+      }
+    });
+  });
 });
-window.location.hash = "";
