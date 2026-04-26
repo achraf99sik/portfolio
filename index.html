@@ -1,193 +1,420 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The portfolio of Achraf Sikal, a Full Stack Developer specializing in building scalable web applications and clean architecture.">
-    <title>Achraf Sikal // Full Stack Developer</title>
-
-    <!-- Google Fonts: Exo 2 (Futuristic Sans-Serif) & Fira Code (Monospace) -->
+    <title>Achraf Sikal | System Architect & Developer</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Fira+Code:wght@400;600&display=swap"
-        rel="stylesheet">
-
-    <!-- Font Awesome for icons -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Clash Display', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: '#030303',
+                        acid: '#d4ff00', 
+                        surface: '#0a0a0a',
+                        carbon: '#141414'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Core Engine */
+        :root { cursor: none; }
+        body { background-color: #030303; color: #f4f4f5; overflow-x: hidden; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        /* Morphing Cursor */
+        .cursor-dot {
+            position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+            background: #d4ff00; border-radius: 50%; pointer-events: none;
+            z-index: 9999; transform: translate(-50%, -50%);
+            mix-blend-mode: difference; transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.4s;
+        }
+        .cursor-dot.active { width: 80px; height: 80px; background: white; }
+        .cursor-dot.project-hover { width: 100px; height: 100px; border-radius: 0%; background: transparent; border: 2px solid #d4ff00; }
+
+        /* Typography & Utilities */
+        .text-huge { font-size: clamp(4rem, 15vw, 18rem); line-height: 0.8; text-transform: uppercase; letter-spacing: -0.02em; }
+        .outline-text { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.15); transition: all 0.5s ease; }
+        .outline-text:hover { color: #d4ff00; -webkit-text-stroke: 1px #d4ff00; }
+        
+        /* Sticky Cards */
+        .cards-container { padding-bottom: 5vh; }
+        .project-card {
+            position: sticky; top: 12vh; height: 75vh; width: 100%;
+            border-radius: 16px; transform-origin: top center; overflow: hidden;
+        }
+        
+        /* SVG Animation Classes */
+        .svg-draw { stroke-dasharray: 2000; stroke-dashoffset: 2000; }
+        .svg-scroll-line { stroke-dasharray: 5000; stroke-dashoffset: 5000; }
+        
+        /* Continuous Background Grid */
+        .bg-grid {
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed; inset: 0; background: #030303; z-index: 9998;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .loader-text { font-size: 10vw; font-weight: 700; color: #d4ff00; line-height: 1; }
+        .loader-bar-bg { width: 200px; height: 2px; background: #333; margin-top: 2rem; overflow: hidden; }
+        .loader-bar { width: 0%; height: 100%; background: #d4ff00; }
+    </style>
 </head>
+<body class="bg-grid antialiased selection:bg-acid selection:text-obsidian">
 
-<body>
+    <div class="cursor-dot" id="cursor"></div>
 
-    <!-- Preloader -->
     <div id="preloader">
-        <div class="loader-text">> SYSTEM BOOTING...</div>
-        <div class="loader-bar"></div>
+        <div class="font-mono text-sm text-gray-500 mb-4">Compiling Environment</div>
+        <div class="loader-text" id="loader-counter">00</div>
+        <div class="loader-bar-bg"><div class="loader-bar" id="loader-bar"></div></div>
     </div>
 
-    <!-- Navigation -->
-    <header>
-        <nav>
-            <a href="#home" class="logo">> A_S</a>
-            <ul class="nav-links">
-                <li><a href="#about">01_ABOUT</a></li>
-                <li><a href="#experience">02_EXPERIENCE</a></li>
-                <li><a href="#skills">03_SKILLS</a></li>
-                <li><a href="#projects">04_PROJECTS</a></li>
-                <li><a href="#contact">05_CONTACT</a></li>
-            </ul>
-            <div class="hamburger">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="hero-content">
-                <p class="hero-intro">Hello, I'm Achraf Sikal. I am a</p>
-                <h1><span id="typing-text"></span><span class="cursor">_</span></h1>
-                <p class="hero-subtitle">Passionate about building scalable web applications and clean architecture.</p>
-                <div class="social-links hero-socials">
-                    <a href="https://github.com/achraf99sik" target="_blank" aria-label="GitHub"><i
-                            class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/achraf-sikal" target="_blank" aria-label="LinkedIn"><i
-                            class="fab fa-linkedin"></i></a>
-                    <a href="mailto:achrafsikal@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-                </div>
-                <a href="#projects" class="btn">_view_my_work</a>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about">
-            <h2 class="section-title" data-text="01_ABOUT_ME">01_ABOUT_ME</h2>
-            <div class="about-grid">
-                <div class="about-text">
-                    <p>
-                        A motivated and rigorous Full Stack Developer with solid experience in designing and developing
-                        modern, performant web applications. I am passionate about clean architectures, scalable
-                        solutions, and continuous learning.
-                        <br><br>
-                        Currently seeking a full-time position to contribute to innovative projects and bring real value
-                        through technology.
-                    </p>
-                </div>
-                <div class="education">
-                    <h3>// EDUCATION_LOG</h3>
-                    <div class="timeline-item">
-                        <span class="date">2024 - 2026</span>
-                        <h4>Web Development</h4>
-                        <p>YOUCODE (UM6P)</p>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="date">2019 - 2022</span>
-                        <h4>Bachelor's in Physical Sciences</h4>
-                        <p>Université Chouaib Doukkali</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience Section -->
-        <section id="experience">
-            <h2 class="section-title" data-text="02_EXPERIENCE">02_EXPERIENCE</h2>
-            <div class="experience-card">
-                <div class="card-corners"></div>
-                <div class="exp-header">
-                    <h3>Full Stack Developer <span class="role-type">// Intern</span></h3>
-                    <span class="exp-date">06/2025 - 08/2025</span>
-                </div>
-                <h4>@CodingArt - Technopark Agadir</h4>
-                <ul>
-                    <li>> Designed and developed modern web applications using <strong>Angular</strong> and
-                        <strong>NestJS</strong>.</li>
-                    <li>> Utilized <strong>TypeScript</strong> & <strong>RxJS</strong> to build a modular, maintainable
-                        architecture.</li>
-                    <li>> Collaborated in an Agile/SCRUM environment to meet project milestones.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section id="skills">
-            <h2 class="section-title" data-text="03_SKILLS_MATRIX">03_SKILLS_MATRIX</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>// FRONT_END</h3>
-                    <div class="skill-list">
-                        <span>Angular</span><span>React</span><span>Next.js</span><span>TypeScript</span><span>HTML5/CSS3</span><span>Tailwind
-                            CSS</span></div>
-                </div>
-                <div class="skill-category">
-                    <h3>// BACK_END</h3>
-                    <div class="skill-list"><span>NestJS</span><span>Laravel</span><span>Node.js</span><span>Spring
-                            Boot</span><span>PHP</span><span>Java</span></div>
-                </div>
-                <div class="skill-category">
-                    <h3>// DATABASES</h3>
-                    <div class="skill-list"><span>MySQL</span><span>PostgreSQL</span><span>MongoDB</span></div>
-                </div>
-                <div class="skill-category">
-                    <h3>// TOOLS_&_METHODS</h3>
-                    <div class="skill-list">
-                        <span>Docker</span><span>Git/GitHub</span><span>Postman</span><span>Agile/SCRUM</span><span>Jira</span><span>Figma</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects">
-            <h2 class="section-title" data-text="04_PROJECTS">04_PROJECTS</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="card-corners"></div>
-                    <h3>Horizon - Video Platform</h3>
-                    <p>A YouTube-like platform for video playback and content creation, built with a modern stack.</p>
-                    <div class="tags"><span>Laravel</span><span>React</span><span>PostgreSQL</span><span>Tailwind
-                            CSS</span></div>
-                    <a href="https://github.com/achraf99sik/horizen" target="_blank" class="project-link">> GOTO_REPO</a>
-                </div>
-                <div class="project-card">
-                    <div class="card-corners"></div>
-                    <h3>Youdemy - E-Learning</h3>
-                    <p>An online learning platform for students to enroll in various courses and track progress.</p>
-                    <div class="tags"><span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Bootstrap</span>
-                    </div>
-                    <a href="https://github.com/achraf99sik/sikal_achraf-youdemy" target="_blank" class="project-link">> GOTO_REPO</a>
-                </div>
-                <div class="project-card">
-                    <div class="card-corners"></div>
-                    <h3>Tricol Rest API</h3>
-                    <p>This API handles the entire supplier order lifecycle, from creation to tracking, while integrating advanced stock
-                    movement and valuation logic using methods such as FIFO and CUMP.</p>
-                    <div class="tags"><span>Spring Boot</span><span>PostgreSQL</span><span>Swagger</span>
-                    </div>
-                    <a href="https://github.com/achraf99sik/Tricol" target="_blank" class="project-link">>
-                        GOTO_REPO</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer id="contact">
-        <h2 class="section-title" data-text="05_CONTACT">05_CONTACT</h2>
-        <p>Open for opportunities. Let's build something amazing together.</p>
-        <div class="contact-links">
-            <a href="mailto:achrafsikal@gmail.com" class="btn">achrafsikal@gmail.com</a>
-            <a href="https://www.linkedin.com/in/achraf-sikal" target="_blank" class="btn">LinkedIn</a>
+    <nav class="fixed top-0 w-full z-50 p-6 md:px-12 flex justify-between items-center mix-blend-difference">
+        <a href="#home" class="font-bold text-xl tracking-wide text-white hover-target uppercase">Achraf Sikal</a>
+        <div class="hidden md:flex gap-8 font-mono text-sm uppercase tracking-widest text-gray-400">
+            <a href="#expertise" class="hover-target hover:text-acid transition-colors">Journey</a>
+            <a href="#work" class="hover-target hover:text-acid transition-colors">Archive</a>
+            <a href="#cv" class="hover-target hover:text-acid transition-colors">Resume</a>
         </div>
-        <div class="copyright">> Achraf Sikal © 2025 // Coded with <i class="fas fa-heart"></i></div>
+        <a href="mailto:achrafsikal@gmail.com" class="font-mono text-sm uppercase tracking-widest text-obsidian bg-acid px-6 py-2 rounded-none hover:bg-white transition-colors hover-target">Contact</a>
+    </nav>
+
+    <svg class="fixed top-0 left-6 md:left-12 w-2 h-full z-0 pointer-events-none opacity-30 hidden md:block" viewBox="0 0 2 1000" preserveAspectRatio="none">
+        <line x1="1" y1="0" x2="1" y2="1000" stroke="#d4ff00" stroke-width="2" class="svg-scroll-line" id="global-scroll-line"/>
+    </svg>
+
+    <section id="home" class="min-h-screen w-full flex flex-col justify-center px-6 md:px-24 relative overflow-hidden pt-20">
+        
+        <svg class="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-3/4 h-auto opacity-20 z-0 pointer-events-none" id="hero-matrix" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="matrix-group">
+                <circle cx="400" cy="400" r="350" stroke="#d4ff00" stroke-width="1" class="svg-draw" stroke-dasharray="2 8"/>
+                <circle cx="400" cy="400" r="300" stroke="white" stroke-width="0.5" class="svg-draw"/>
+                <path d="M400 100 L700 400 L400 700 L100 400 Z" stroke="#d4ff00" stroke-width="1" class="svg-draw"/>
+                <path d="M250 250 L550 550 M250 550 L550 250" stroke="white" stroke-width="0.5" class="svg-draw"/>
+                <rect x="300" y="300" width="200" height="200" stroke="#d4ff00" stroke-width="2" transform="rotate(45 400 400)" class="svg-draw"/>
+                <circle cx="400" cy="400" r="50" fill="#d4ff00" opacity="0.1" class="hero-core"/>
+            </g>
+        </svg>
+
+        <div class="z-10 relative">
+            <div class="overflow-hidden"><h1 class="text-huge font-bold hero-text translate-y-full">ACHRAF</h1></div>
+            <div class="overflow-hidden"><h1 class="text-huge font-bold outline-text hero-text translate-y-full md:ml-32 hover-target">SIKAL</h1></div>
+            
+            <div class="mt-12 md:ml-32 max-w-2xl hero-fade opacity-0 flex flex-col md:flex-row gap-12">
+                <div class="font-mono text-sm text-acid uppercase tracking-widest flex-shrink-0">
+                    <p class="mb-2">Current Role</p>
+                    <p class="text-white bg-white/10 px-3 py-1 inline-block border border-white/20">Full Stack Engineer</p>
+                </div>
+                <div>
+                    <p class="text-gray-400 text-xl md:text-2xl leading-relaxed font-light">
+                        Architecting scalable software ecosystems. Bridging complex <strong class="text-white">Spring Boot</strong> domain logic with high-fidelity, interactive <strong class="text-white">React & Angular</strong> client interfaces.
+                    </p>
+                    <div class="mt-8 flex gap-4">
+                        <a href="#work" class="font-mono text-sm uppercase tracking-widest text-obsidian bg-acid px-6 py-3 hover:bg-white transition-colors hover-target">View Work</a>
+                        <a href="#cv" class="font-mono text-sm uppercase tracking-widest text-white border border-white/20 px-6 py-3 hover:border-acid hover:text-acid transition-colors hover-target">View CV</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="expertise" class="py-32 px-6 md:px-24 bg-surface relative z-10 border-y border-white/5">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-16">
+            
+            <div class="md:col-span-4">
+                <p class="font-mono text-acid text-sm uppercase tracking-widest mb-4">01 / Background</p>
+                <h2 class="text-4xl md:text-6xl font-bold uppercase leading-none mb-8 gs-reveal">The<br>Journey</h2>
+                <p class="text-gray-400 text-lg leading-relaxed gs-reveal">
+                    My foundation in physical sciences provided the analytical rigor that I now apply to software architecture, database schemas, and algorithmic problem-solving.
+                </p>
+            </div>
+
+            <div class="md:col-span-8 relative">
+                <svg class="absolute left-[11px] top-0 w-1 h-full z-0" preserveAspectRatio="none">
+                    <line x1="0" y1="0" x2="0" y2="100%" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                    <line x1="0" y1="0" x2="0" y2="100%" stroke="#d4ff00" stroke-width="2" class="svg-scroll-line" id="timeline-line"/>
+                </svg>
+
+                <div class="space-y-16 relative z-10">
+                    <div class="pl-12 relative gs-reveal group">
+                        <div class="absolute left-0 top-2 w-6 h-6 rounded-full bg-obsidian border-2 border-acid flex items-center justify-center group-hover:scale-125 transition-transform duration-300">
+                            <div class="w-2 h-2 bg-acid rounded-full"></div>
+                        </div>
+                        <p class="font-mono text-acid text-sm mb-2">06/2025 — 08/2025</p>
+                        <h3 class="text-3xl font-bold text-white mb-2">Full Stack Developer <span class="text-gray-600 font-mono text-lg">@ CodingArt</span></h3>
+                        <p class="text-gray-400 leading-relaxed mb-4">Engineered modern web applications utilizing Angular, NestJS, and TypeScript. Implemented modular architectures using RxJS within strict Agile/SCRUM sprint cycles.</p>
+                    </div>
+
+                    <div class="pl-12 relative gs-reveal group">
+                        <div class="absolute left-0 top-2 w-6 h-6 rounded-full bg-obsidian border-2 border-white/30 flex items-center justify-center group-hover:border-acid transition-colors duration-300"></div>
+                        <p class="font-mono text-gray-500 text-sm mb-2">2024 — 2026</p>
+                        <h3 class="text-3xl font-bold text-white mb-2">Web Development <span class="text-gray-600 font-mono text-lg">@ YOUCODE (UM6P)</span></h3>
+                        <p class="text-gray-400 leading-relaxed">Immersive, project-based training focusing on full-stack technologies, clean code methodologies, and collaborative development pipelines.</p>
+                    </div>
+
+                    <div class="pl-12 relative gs-reveal group">
+                        <div class="absolute left-0 top-2 w-6 h-6 rounded-full bg-obsidian border-2 border-white/30 flex items-center justify-center group-hover:border-acid transition-colors duration-300"></div>
+                        <p class="font-mono text-gray-500 text-sm mb-2">2019 — 2022</p>
+                        <h3 class="text-3xl font-bold text-white mb-2">B.S. Physical Sciences <span class="text-gray-600 font-mono text-lg">@ Univ. Chouaib Doukkali</span></h3>
+                        <p class="text-gray-400 leading-relaxed">Developed a strong foundation in complex systems analysis, mathematics, and logical structuring.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 md:px-24 bg-obsidian relative overflow-hidden">
+        <div class="max-w-7xl mx-auto z-10 relative">
+            <h2 class="text-3xl md:text-5xl font-bold uppercase mb-16 text-center outline-text hover-target">Tech Stack</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-carbon p-8 border border-white/5 hover:border-acid/50 transition-colors gs-reveal group">
+                    <h4 class="font-mono text-acid mb-6 text-sm uppercase">Client Side</h4>
+                    <ul class="space-y-3 text-gray-400 font-medium">
+                        <li class="group-hover:text-white transition-colors">Angular & React</li>
+                        <li class="group-hover:text-white transition-colors">Next.js & TanStack</li>
+                        <li class="group-hover:text-white transition-colors">Tailwind CSS</li>
+                        <li class="group-hover:text-white transition-colors">GSAP & Lenis</li>
+                    </ul>
+                </div>
+                <div class="bg-carbon p-8 border border-white/5 hover:border-acid/50 transition-colors gs-reveal group" style="transition-delay: 100ms;">
+                    <h4 class="font-mono text-acid mb-6 text-sm uppercase">Server Side</h4>
+                    <ul class="space-y-3 text-gray-400 font-medium">
+                        <li class="group-hover:text-white transition-colors">Java & Spring Boot</li>
+                        <li class="group-hover:text-white transition-colors">NestJS & Node.js</li>
+                        <li class="group-hover:text-white transition-colors">PHP & Laravel</li>
+                        <li class="group-hover:text-white transition-colors">RESTful APIs</li>
+                    </ul>
+                </div>
+                <div class="bg-carbon p-8 border border-white/5 hover:border-acid/50 transition-colors gs-reveal group" style="transition-delay: 200ms;">
+                    <h4 class="font-mono text-acid mb-6 text-sm uppercase">Data Ops</h4>
+                    <ul class="space-y-3 text-gray-400 font-medium">
+                        <li class="group-hover:text-white transition-colors">PostgreSQL</li>
+                        <li class="group-hover:text-white transition-colors">MySQL</li>
+                        <li class="group-hover:text-white transition-colors">MongoDB</li>
+                        <li class="group-hover:text-white transition-colors">Data Modeling</li>
+                    </ul>
+                </div>
+                <div class="bg-carbon p-8 border border-white/5 hover:border-acid/50 transition-colors gs-reveal group" style="transition-delay: 300ms;">
+                    <h4 class="font-mono text-acid mb-6 text-sm uppercase">Infrastructure</h4>
+                    <ul class="space-y-3 text-gray-400 font-medium">
+                        <li class="group-hover:text-white transition-colors">Docker</li>
+                        <li class="group-hover:text-white transition-colors">Git & GitHub Actions</li>
+                        <li class="group-hover:text-white transition-colors">Postman / Swagger</li>
+                        <li class="group-hover:text-white transition-colors">Agile & Clean Arch</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="py-32 px-6 md:px-24 bg-surface relative z-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto mb-16">
+            <p class="font-mono text-acid text-sm uppercase tracking-widest mb-4">02 / Deployment Archive</p>
+            <h2 class="text-5xl md:text-7xl font-bold uppercase">Selected Works</h2>
+        </div>
+
+        <div class="max-w-7xl mx-auto cards-container relative">
+            
+            <div class="project-card bg-carbon border border-white/10 flex flex-col md:flex-row shadow-2xl project-hover-target" id="card-1">
+                <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <p class="font-mono text-gray-500 uppercase text-xs border border-gray-700 px-3 py-1 rounded-full">Logistics Platform</p>
+                            <span class="font-mono text-acid text-sm">2026</span>
+                        </div>
+                        <h3 class="text-4xl md:text-6xl font-bold mb-6 text-white">UniDelivery</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">Comprehensive courier and delivery management system. Engineered complex use-case architectures for dynamic routing and dispatch.</p>
+                    </div>
+                    <div class="mt-12 flex flex-wrap gap-2 font-mono text-xs text-acid">
+                        <span class="bg-acid/10 px-3 py-2 rounded">Spring Boot</span>
+                        <span class="bg-acid/10 px-3 py-2 rounded">Java</span>
+                        <span class="bg-acid/10 px-3 py-2 rounded">Domain Logic</span>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-full bg-obsidian relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1580674684081-7767428012aa?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-1000 mix-blend-luminosity"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-carbon to-transparent opacity-80"></div>
+                </div>
+            </div>
+
+            <div class="project-card bg-[#080808] border border-white/10 flex flex-col md:flex-row shadow-2xl mt-12 project-hover-target" id="card-2">
+                <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <p class="font-mono text-gray-500 uppercase text-xs border border-gray-700 px-3 py-1 rounded-full">E-Commerce UI</p>
+                            <span class="font-mono text-acid text-sm">2026</span>
+                        </div>
+                        <h3 class="text-4xl md:text-6xl font-bold mb-6 text-white">Kookify</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">High-fidelity food platform utilizing advanced client-side rendering. Heavily branded checkout optimizations and interactive menu states.</p>
+                    </div>
+                    <div class="mt-12 flex flex-wrap gap-2 font-mono text-xs text-acid">
+                        <span class="bg-acid/10 px-3 py-2 rounded">React / Angular</span>
+                        <span class="bg-acid/10 px-3 py-2 rounded">GSAP Animations</span>
+                        <span class="bg-acid/10 px-3 py-2 rounded">Tailwind</span>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-full bg-obsidian relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-1000 mix-blend-luminosity"></div>
+                </div>
+            </div>
+
+            <div class="project-card bg-carbon border border-white/10 flex flex-col md:flex-row shadow-2xl mt-12 project-hover-target" id="card-3">
+                <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <p class="font-mono text-gray-500 uppercase text-xs border border-gray-700 px-3 py-1 rounded-full">Rest API</p>
+                            <span class="font-mono text-acid text-sm">2025</span>
+                        </div>
+                        <h3 class="text-4xl md:text-6xl font-bold mb-6 text-white">Tricol</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">Robust REST API handling the entire supplier order lifecycle. Integrates advanced stock movement and valuation logic including FIFO and CUMP methodologies.</p>
+                    </div>
+                    <div class="mt-12 flex items-center justify-between">
+                        <div class="flex flex-wrap gap-2 font-mono text-xs text-acid">
+                            <span class="bg-acid/10 px-3 py-2 rounded">PostgreSQL</span>
+                            <span class="bg-acid/10 px-3 py-2 rounded">Spring Boot</span>
+                        </div>
+                        <a href="https://github.com/achraf99sik/Tricol" target="_blank" class="font-mono text-white hover:text-acid transition-colors uppercase tracking-widest text-sm hover-target border-b border-acid pb-1">GitHub Repo</a>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-full bg-obsidian relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-1000 mix-blend-luminosity"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="cv" class="py-32 px-6 md:px-24 bg-obsidian relative z-10 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gs-reveal">
+                <div>
+                    <p class="font-mono text-acid text-sm uppercase tracking-widest mb-4">03 / Document Reference</p>
+                    <h2 class="text-5xl md:text-7xl font-bold uppercase">Curriculum<br>Vitae</h2>
+                </div>
+                <a href="assets/pdf/achraf-sikal-cv.pdf" target="_blank" class="mt-8 md:mt-0 font-mono text-sm uppercase tracking-widest text-obsidian bg-acid px-8 py-4 hover:bg-white transition-colors hover-target inline-flex items-center gap-3">
+                    Download PDF <i class="fas fa-arrow-down"></i>
+                </a>
+            </div>
+
+            <div class="bg-carbon border border-white/10 p-8 md:p-16 gs-reveal shadow-2xl relative overflow-hidden group">
+                <svg class="absolute top-0 right-0 w-64 h-64 opacity-5 pointer-events-none" viewBox="0 0 100 100"><circle cx="100" cy="0" r="50" stroke="white" stroke-width="1" fill="none"/></svg>
+
+                <div class="grid md:grid-cols-3 gap-16 relative z-10">
+                    <div class="md:col-span-1 space-y-12">
+                        <div>
+                            <h4 class="font-mono text-white mb-4 uppercase tracking-widest border-b border-white/10 pb-2">Profile</h4>
+                            <p class="text-gray-400 leading-relaxed font-light">Full Stack Engineer specializing in scalable web ecosystems, bridging rigorous Spring Boot microservices with high-fidelity Angular and React interfaces. Proven expertise in RESTful API design, OAuth2/JWT security protocols, and clean architecture principles.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-mono text-white mb-4 uppercase tracking-widest border-b border-white/10 pb-2">Languages</h4>
+                            <ul class="text-gray-400 space-y-2 font-light">
+                                <li class="flex justify-between"><span>Arabic</span> <span class="text-acid">Native</span></li>
+                                <li class="flex justify-between"><span>English</span> <span class="text-acid">B2</span></li>
+                                <li class="flex justify-between"><span>French</span> <span class="text-acid">A2</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 space-y-12">
+                        <div>
+                            <h4 class="font-mono text-white mb-6 uppercase tracking-widest border-b border-white/10 pb-2">Experience</h4>
+                            
+                            <div class="mb-8 border-l-2 border-acid pl-6">
+                                <div class="flex flex-col md:flex-row justify-between md:items-center mb-2">
+                                    <h5 class="text-xl font-bold text-white">Full Stack Developer</h5>
+                                    <span class="font-mono text-acid text-sm">Jan 2026 — Present</span>
+                                </div>
+                                <p class="text-gray-500 font-mono text-sm mb-4">CodingArt, Technopark Agadir</p>
+                                <ul class="list-disc list-outside ml-4 text-gray-400 space-y-2 font-light marker:text-acid">
+                                    <li>Engineered scalable web applications utilizing Angular and NestJS, serving multiple concurrent workflows.</li>
+                                    <li>Designed and deployed RESTful APIs, significantly optimizing data flow and response times.</li>
+                                    <li>Developed modular, reusable UI components, ensuring cross-platform maintainability.</li>
+                                    <li>Integrated reactive programming paradigms using RxJS to manage asynchronous data streams.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-mono text-white mb-6 uppercase tracking-widest border-b border-white/10 pb-2">Education</h4>
+                            
+                            <div class="mb-8 border-l-2 border-white/20 pl-6 hover:border-acid transition-colors">
+                                <div class="flex justify-between items-center mb-1">
+                                    <h5 class="text-lg font-bold text-white">Full Stack Web Development Program</h5>
+                                    <span class="font-mono text-gray-500 text-sm">2024 — 2026</span>
+                                </div>
+                                <p class="text-gray-400 font-light">YOUCODE (UM6P)</p>
+                            </div>
+
+                            <div class="border-l-2 border-white/20 pl-6 hover:border-acid transition-colors">
+                                <div class="flex justify-between items-center mb-1">
+                                    <h5 class="text-lg font-bold text-white">Bachelor's Degree in Physical Sciences</h5>
+                                    <span class="font-mono text-gray-500 text-sm">2019 — 2022</span>
+                                </div>
+                                <p class="text-gray-400 font-light">Université Chouaib Doukkali</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-obsidian py-32 px-6 md:px-24 border-t border-white/5 relative z-30 overflow-hidden">
+        <svg class="absolute bottom-0 right-0 w-1/2 h-auto opacity-5 pointer-events-none" viewBox="0 0 500 500" fill="none">
+            <circle cx="500" cy="500" r="400" stroke="white" stroke-width="2" stroke-dasharray="10 20"/>
+            <circle cx="500" cy="500" r="300" stroke="white" stroke-width="1"/>
+        </svg>
+
+        <div class="max-w-7xl mx-auto flex flex-col items-start relative z-10">
+            <p class="font-mono text-acid text-sm uppercase tracking-widest mb-8">Ready For Deployment</p>
+            <h2 class="text-huge font-bold leading-none uppercase mb-12 text-white">Let's<br><a href="mailto:achrafsikal@gmail.com" class="outline-text hover-target">Connect</a></h2>
+            
+            <p class="text-gray-400 text-xl max-w-lg mb-16">Currently open for new engineering challenges and collaborative opportunities.</p>
+
+            <div class="w-full flex flex-col md:flex-row justify-between items-end font-mono text-sm text-gray-500 uppercase pt-8 border-t border-white/10">
+                <div class="flex gap-8 mb-8 md:mb-0">
+                    <a href="https://github.com/achraf99sik" target="_blank" class="text-white hover:text-acid transition-colors hover-target">GitHub</a>
+                    <a href="https://www.linkedin.com/in/achraf-sikal" target="_blank" class="text-white hover:text-acid transition-colors hover-target">LinkedIn</a>
+                    <a href="mailto:achrafsikal@gmail.com" class="text-white hover:text-acid transition-colors hover-target">Email</a>
+                </div>
+                <div class="text-right">
+                    <p class="text-white mb-1">Achraf Sikal © 2026</p>
+                    <p class="text-xs">Based in Morocco</p>
+                </div>
+            </div>
+        </div>
     </footer>
 
-    <script src="script.js"></script>
-</body>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
+    <script src="assets/javascript/script.js"></script>
+</body>
 </html>
